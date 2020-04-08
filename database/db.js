@@ -1,4 +1,5 @@
 //module is in strict mode by default ;)
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 (async () => {
