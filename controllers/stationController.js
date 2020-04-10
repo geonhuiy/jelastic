@@ -8,8 +8,19 @@ const station_list_get = async (req, res) => {
     let limit = 10;
     if (req.query.start) start = +req.query.start;
     if (req.query.limit) limit = +req.query.limit;
-    //let stations = [];
-    const stations = await stationModel.find();
+    let stations = [];
+    stations = await stationModel
+      .find()
+      .skip(start)
+      .limit(limit)
+      .populate({
+        path: "Connections",
+        populate: [
+          { path: "ConnectionTypeID" },
+          { path: "CurrentTypeID" },
+          { path: "LevelID" },
+        ],
+      });
     res.json(stations);
   } catch (e) {
     res.status(500).json({ message: e.message });
