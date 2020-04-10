@@ -84,9 +84,9 @@ const station_post = async (req, res) => {
     const newStation = req.body.Station;
     newStation.connections = new stationModel(station);
     const final = await newStation.save();
-    res.json(final);
+    res.status(200).json(final);
   } catch (e) {
-    console.log(e.message);
+    res.status(500).json({message: e.message});
   }
 };
 
