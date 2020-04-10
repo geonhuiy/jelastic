@@ -1,27 +1,55 @@
 "use strict";
 const stationModel = require("../models/station");
 const connectionModel = require("../models/connection");
+const rectangleBounds = require('../utils/rectangleBounds');
 
 const station_list_get = async (req, res) => {
   try {
     let start = 0;
     let limit = 10;
+
+    const topRight = req.query.topRight;
+    const bottomLeft = req.query.bottomLeft;
+
     if (req.query.start) start = +req.query.start;
     if (req.query.limit) limit = +req.query.limit;
     let stations = [];
-    stations = await stationModel
-      .find()
-      .skip(start)
-      .limit(limit)
-      .populate({
-        path: "Connections",
-        populate: [
-          { path: "ConnectionTypeID" },
-          { path: "CurrentTypeID" },
-          { path: "LevelID" },
-        ],
-      });
-    res.json(stations);
+    if (topRight && bottomLeft) {
+      const mapBounds = rectangleBounds(
+        JSON.parse(topRight),
+        JSON.parse(bottomLeft)
+      );
+      stations = await stationModel
+        .find({
+          Location: {
+            $geoWithin: {
+              $geometry: mapBounds,
+            },
+          },
+        })
+        .populate({
+          path: "Connections",
+          populate: [
+            { path: "ConnectionTypeID" },
+            { path: "CurrentTypeID" },
+            { path: "LevelID" },
+          ],
+        });
+    } else {
+      stations = await stationModel
+        .find()
+        .skip(start)
+        .limit(limit)
+        .populate({
+          path: "Connections",
+          populate: [
+            { path: "ConnectionTypeID" },
+            { path: "CurrentTypeID" },
+            { path: "LevelID" },
+          ],
+        });
+      res.json(stations);
+    }
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
