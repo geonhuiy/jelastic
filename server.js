@@ -4,7 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const db = require("./database/db");
-const passport = require('./utils/pass');
+const passport = require("./utils/pass");
 const graphQlHttp = require("express-graphql");
 
 //Routes
@@ -19,7 +19,7 @@ const schema = require("./schema/schema");
 
 app.use(express.json()); //parsing application/json
 app.use(express.urlencoded({ extended: true })); //parsing application/form-urlencoded
-app.use('/modules', express.static('node_modules'));
+app.use("/modules", express.static("node_modules"));
 
 //REST paths
 app.use("/station", stationRoute);
@@ -38,5 +38,14 @@ app.use("/graphql", (req, res) => {
 });
 
 db.on("connected", () => {
-  app.listen(3000);
+  process.env.NODE_ENV = process.env.NODE_ENV || "development";
+  if (process.env.NODE_ENV === "production") {
+    require("./production")(app, process.env.PORT);
+  } else {
+    require("./localhost")(
+      app,
+      process.env.HTTP_PORT,
+      process.env.HTTPS_PORT
+    );
+  }
 });
