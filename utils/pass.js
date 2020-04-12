@@ -10,7 +10,6 @@ const ExtractJWT = passportJWT.ExtractJwt;
 
 passport.use(new Strategy(
     async (username, password, done) => {
-      console.log(username, password);
       try {
         const user = await userModel.findOne({username});
         if (user === null) {
@@ -39,7 +38,6 @@ passport.use(new JWTStrategy({
       try {
         const user = await userModel.findById(jwtPayload._id,
             '-password -__v');
-        console.log('pl user', user);
         if (user !== null) {
           return done(null, user);
         } else {

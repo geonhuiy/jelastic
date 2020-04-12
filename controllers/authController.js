@@ -15,7 +15,7 @@ const login = (req, res) => {
               if (err) {
                 reject(err);
               }
-              // generate a signed son web token with the contents of user object and return it in the response
+              // generate a signed json web token with the contents of user object and return it in the response
               const token = jwt.sign(user, '1234');
               resolve({user, token});
             });
@@ -31,6 +31,7 @@ const checkAuth = (req, res) => {
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', (err, user) => {
       if (err || !user) {
+          console.log(err);
         reject('Not authenticated or user expired');
       }
       resolve(user);

@@ -12,12 +12,17 @@ const {
   GraphQLNonNull,
 } = require("graphql");
 
+const bcrypt = require('bcrypt');
+const saltRound = 12;
+
 const station = require("../models/station");
 const connection = require("../models/connection");
 const connectiontype = require("../models/connectionTypes");
 const currenttype = require("../models/currentTypes");
 const level = require("../models/levels");
 const user = require("../models/user");
+
+const authController = require("../controllers/authController");
 
 const rectangleBounds = require("../utils/rectangleBounds");
 
@@ -344,7 +349,7 @@ const Mutation = new GraphQLObjectType({
       },
       resolve: async (parent, args, { req, res }) => {
         try {
-          authController.checkAuth(req, res);
+          await authController.checkAuth(req, res);
           // delete connections
           const stat = await station.findById(args.id);
           const delResult = await Promise.all(
