@@ -4,6 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const db = require("./database/db");
+const passport = require('./utils/pass');
 const graphQlHttp = require("express-graphql");
 
 //Routes
@@ -18,6 +19,7 @@ const schema = require("./schema/schema");
 
 app.use(express.json()); //parsing application/json
 app.use(express.urlencoded({ extended: true })); //parsing application/form-urlencoded
+app.use('/modules', express.static('node_modules'));
 
 //REST paths
 app.use("/station", stationRoute);

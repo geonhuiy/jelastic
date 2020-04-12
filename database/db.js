@@ -1,6 +1,9 @@
-//module is in strict mode by default ;)
+
 require('dotenv').config();
+
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 (async () => {
   try {
