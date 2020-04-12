@@ -317,15 +317,14 @@ const Mutation = new GraphQLObjectType({
       resolve: async (parent, args, { req, res }) => {
         try {
           await authController.checkAuth(req, res);
-          const conns = await Promise.all(
+          /*const conns = await Promise.all(
             args.Connections.map(async (conn) => {
               const result = await connection.findByIdAndUpdate(conn.id, conn, {
                 new: true,
               });
               return result;
             })
-          );
-
+          );*/
           let newStation = {
             Title: args.Title,
             AddressLine1: args.AddressLine1,
