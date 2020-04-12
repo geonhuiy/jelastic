@@ -105,3 +105,4 @@ dist
 
 ssl-cert.pem
 ssl-key.pem
+certrequest.csr
